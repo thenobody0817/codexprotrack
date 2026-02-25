@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <title>Codex Pro Track</title>
+    <style>
+      :root {
+        --bg: #0b1220;
+        --bg-soft: #111a2b;
+        --card: #131e33;
+        --card-elevated: #182742;
+        --text: #e6eefc;
+        --text-soft: #9eb0ce;
+        --accent: #5aa2ff;
+        --accent-strong: #3f8fff;
+        --ok: #22c55e;
+        --warn: #f59e0b;
+        --radius-lg: 18px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 8px 24px rgba(2, 8, 22, 0.35);
+      }
+      [data-theme='apple-light'] {
+        --bg: #eef3fb;
+        --bg-soft: #f4f7fc;
+        --card: #ffffff;
+        --card-elevated: #f7faff;
+        --text: #0f172a;
+        --text-soft: #51617f;
+        --accent: #2563eb;
+        --accent-strong: #1d4ed8;
+        --shadow: 0 10px 26px rgba(37, 99, 235, 0.1);
+      }
+      [data-theme='apple-dark'] {
+        --bg: #070b14;
+        --bg-soft: #0f1628;
+        --card: #111b30;
+        --card-elevated: #192743;
+        --text: #f1f5ff;
+        --text-soft: #9aaac6;
+        --accent: #60a5fa;
+        --accent-strong: #3b82f6;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: radial-gradient(1300px 800px at 50% -20%, #1d2a47 0%, var(--bg) 48%);
+        color: var(--text);
+      }
+      .app { max-width: 760px; margin: 0 auto; padding: 14px 12px 26px; }
+
+      .topbar { display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+      h2 { margin: 0; letter-spacing: .2px; font-size: 1.3rem; }
+      h3 { margin: 4px 0; font-size: 1.15rem; }
+      h4 { margin: 0 0 6px; font-size: 1rem; }
+
+      .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .online { background: color-mix(in srgb, var(--ok) 30%, transparent); color: #fff; }
+      .offline { background: color-mix(in srgb, var(--warn) 30%, transparent); color: #fff; }
+
+      .card {
+        background: linear-gradient(180deg, var(--card-elevated) 0%, var(--card) 100%);
+        border: 1px solid color-mix(in srgb, var(--text-soft) 16%, transparent);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        padding: 14px;
+        margin-top: 12px;
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      button, select, input {
+        font: inherit;
+        border-radius: var(--radius-md);
+        border: 1px solid color-mix(in srgb, var(--text-soft) 28%, transparent);
+        background: color-mix(in srgb, var(--card-elevated) 88%, black 12%);
+        color: var(--text);
+        min-height: 48px;
+        padding: 9px 12px;
+        transition: transform .08s ease, border-color .15s ease, background-color .15s ease;
+      }
+      button:active { transform: translateY(1px) scale(0.995); }
+      button.primary {
+        background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
+        color: #fff;
+        border: none;
+        font-weight: 700;
+      }
+      .tabs button {
+        min-height: 44px;
+        font-size: .92rem;
+        background: color-mix(in srgb, var(--card-elevated) 80%, transparent);
+      }
+      .tabs button.primary { box-shadow: 0 8px 20px color-mix(in srgb, var(--accent-strong) 45%, transparent); }
+
+      .hidden { display: none; }
+      .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      .grow { flex: 1; min-width: 0; }
+      .tiny { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+
+      .stat {
+        font-size: 12px;
+        padding: 7px 10px;
+        border-radius: var(--radius-sm);
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+        background: color-mix(in srgb, var(--accent) 14%, transparent);
+      }
+      .counter {
+        display: grid;
+        grid-template-columns: 44px 1fr 44px;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+      }
+      .counter input {
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.03rem;
+      }
+      .counter button { font-size: 1.2rem; padding: 0; }
+
+      .rir { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-top: 10px; }
+      .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td {
+        text-align: left;
+        padding: 8px 4px;
+        border-bottom: 1px solid color-mix(in srgb, var(--text-soft) 20%, transparent);
+      }
+      th { color: var(--text-soft); font-size: 12px; font-weight: 600; letter-spacing: .2px; }
+      .install { font-size: 12px; min-height: 36px; }
+
+      @media (max-width: 520px) {
+        .app { padding: 10px 10px 20px; }
+        h2 { font-size: 1.15rem; }
+        .tabs { gap: 6px; }
+        .tabs button { font-size: .84rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app" data-theme="apple-dark">
+      <div class="topbar">
+        <h2>Codex Pro Track</h2>
+        <div class="row"><span id="netBadge" class="badge online">Online</span><button id="installBtn" class="install hidden">Install</button></div>
+      </div>
+      <div class="tabs">
+        <button data-tab="workout" class="primary">Workout</button><button data-tab="progress">Progress</button><button data-tab="plates">Plates</button><button data-tab="settings">Settings</button>
+      </div>
+
+      <section id="tab-workout" class="card">
+        <div class="row">
+          <select id="sessionPicker" class="grow"></select>
+          <button id="startSession" class="primary">Start Session</button>
+        </div>
+        <div class="row tiny"><span id="sessionRules"></span></div>
+        <div id="sessionArea" class="hidden">
+          <h3 id="exerciseTitle"></h3>
+          <div class="row tiny"><span id="exerciseMeta"></span></div>
+          <div class="row"><span id="setProgress" class="stat"></span><span id="prFlag" class="stat"></span></div>
+
+          <div class="counter"><button id="loadMinus">-</button><input id="loadInput" type="number" step="1" inputmode="decimal" /><button id="loadPlus">+</button></div>
+          <div class="counter"><button id="repsMinus">-</button><input id="repsInput" type="number" step="1" inputmode="numeric" /><button id="repsPlus">+</button></div>
+
+          <div class="rir" id="rirButtons"></div>
+          <div class="card"><div class="row"><strong>Rest:</strong><span id="timer">00:00</span><button id="plus15">+15s</button><button id="plus30">+30s</button><button id="skipRest">Skip</button></div></div>
+
+          <div class="actions"><button id="completeSet" class="primary">Complete + Next</button><button id="finishSession">Finish Session</button></div>
+        </div>
+      </section>
+
+      <section id="tab-progress" class="card hidden">
+        <h3>Progress</h3>
+        <div id="progressTables"></div>
+        <div class="card">
+          <h4>Bodyweight</h4>
+          <div class="row"><input id="bodyweightInput" type="number" step="0.1" placeholder="kg" /><button id="saveBodyweight" class="primary">Log</button></div>
+          <div id="bwWeekly" class="tiny"></div>
+        </div>
+      </section>
+
+      <section id="tab-plates" class="card hidden">
+        <h3>Plate Calculator</h3>
+        <div class="row"><input id="targetWeight" type="number" placeholder="Target total" /><input id="barWeight" type="number" value="20" /><button id="calcPlates" class="primary">Calc</button></div>
+        <div id="platesResult"></div>
+      </section>
+
+      <section id="tab-settings" class="card hidden">
+        <h3>Settings</h3>
+        <div class="row">
+          <label class="grow">Theme<select id="themeSelect"><option value="apple-dark">Apple Dark</option><option value="apple-light">Apple Light</option></select></label>
+          <label class="grow">Default Rest (s)<input id="defaultRestInput" type="number" min="15" step="15" value="90" /></label>
+        </div>
+        <div class="row"><button id="saveSettings" class="primary">Save</button><button id="exportBtn">Export JSON</button><input id="importFile" type="file" accept="application/json" /></div>
+      </section>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
